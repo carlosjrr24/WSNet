@@ -186,5 +186,6 @@ C:\Users\carlos\Documents\GitHub\WSNet\WSNet\bin\Microsoft.AI.DependencyCollecto
 C:\Users\carlos\Documents\GitHub\WSNet\WSNet\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\Users\carlos\Documents\GitHub\WSNet\WSNet\bin\Microsoft.AI.WindowsServer.xml
 C:\Users\carlos\Documents\GitHub\WSNet\WSNet\bin\Microsoft.AI.Web.xml
+C:\Users\carlos\Documents\GitHub\WSNet\WSNet\obj\Debug\WSNet.csprojResolveAssemblyReference.cache
 C:\Users\carlos\Documents\GitHub\WSNet\WSNet\obj\Debug\WSNet.dll
 C:\Users\carlos\Documents\GitHub\WSNet\WSNet\obj\Debug\WSNet.pdb
