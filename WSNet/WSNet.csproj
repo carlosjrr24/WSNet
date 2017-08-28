@@ -278,6 +278,10 @@
     <Content Include="Views\Role\Create.cshtml" />
     <Content Include="Views\Role\Index.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Role\Edit.cshtml" />
+    <Content Include="Views\Role\prueba.cshtml" />
+    <Content Include="Views\Role\Delete.cshtml" />
+    <Content Include="Views\Role\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
