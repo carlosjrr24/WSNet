@@ -7,12 +7,14 @@
 
 @if (ViewBag.displayMenu == "Yes")
 {
-    <h1>Welcome <strong>@ViewBag.Name</strong>, you have Admin permissions, now you can create user Role.</h1>
+    <h1>Welcome <strong>@ViewBag.Name</strong>, you have Admin permissions</h1>
     <h3>
         <li>@Html.ActionLink("Manage Role", "Index", "Role")</li>
+        <li>@Html.ActionLink("Manage Users", "Index", "ApplicationUsers")</li>
+
     </h3>
 }
 else
 {
-    <h2>  Welcome <strong>@ViewBag.Name</strong>, you do not have permissions, access denied. </h2>
+    <h2>  Welcome <strong>@ViewBag.Name</strong>, you do not have Admin permissions, access denied. </h2>
 }
