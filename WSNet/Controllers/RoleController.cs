@@ -6,30 +6,44 @@ using System.Web.Mvc;
 using WSNet.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
+using System.Net;
 
-namespace shanuMVCUserRoles.Controllers
+
+using System.Data;
+using System.Data.Entity;
+
+
+namespace WSNet.Controllers
 {
-    [Authorize]
-    public class RoleController : Controller
-    {
-        StoreContext context;
 
-        public RoleController()
+        [Authorize]
+        public class RoleController : Controller
         {
-            context = new StoreContext();
-        }
+            private StoreContext db = new StoreContext();
 
-        /// <summary>
-        /// Get All Roles
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Index()
-        {
+            // GET: Roles
+            public ActionResult Index()
+            {
+            if (User.Identity.IsAuthenticated)
+            {
+                if (!isAdminUser())
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(db.Roles.ToList());
+            }
+
+            // GET: Role/Details/5
+            public ActionResult Details(string id)
+            {
 
             if (User.Identity.IsAuthenticated)
             {
-
-
                 if (!isAdminUser())
                 {
                     return RedirectToAction("Index", "Home");
@@ -40,75 +54,148 @@ namespace shanuMVCUserRoles.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var Roles = context.Roles.ToList();
-            return View(Roles);
 
-        }
-        public Boolean isAdminUser()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = User.Identity;
-                var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
-                var s = UserManager.GetRoles(user.GetUserId());
-                if (s[0].ToString() == "Admin")
+            if (id == null)
                 {
-                    return true;
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                else
+                IdentityRole Role = db.Roles.Find(id);
+                if (Role == null)
                 {
-                    return false;
+                    return HttpNotFound();
                 }
+                return View(Role);
             }
-            return false;
-        }
-        /// <summary>
-        /// Create  a New role
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult Create()
+
+        // GET: Role/Edit/5
+        public ActionResult Edit(string id)
         {
-            if (User.Identity.IsAuthenticated)
+            if (id == null)
             {
-
-
-                if (!isAdminUser())
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            IdentityRole Role = db.Roles.Find(id);
+            if (Role == null)
+            {
+                return HttpNotFound();
+            }
+            if (Role.Name !="Admin")
+            {
+                return View(Role);
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
+        }
 
-            var Role = new IdentityRole();
+        // POST: Role/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,Name")] IdentityRole Role)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(Role).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View(Role);
         }
 
-        /// <summary>
-        /// Create a New Role
-        /// </summary>
-        /// <param name="Role"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult Create(IdentityRole Role)
+
+        // GET: Role/Delete/5
+        public ActionResult Delete(string id)
         {
-            if (User.Identity.IsAuthenticated)
+            if (id == null)
             {
-                if (!isAdminUser())
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            IdentityRole Role = db.Roles.Find(id);
+            if (Role == null)
+            {
+                return HttpNotFound();
+            }
+            return View(Role);
+        }
+
+        // POST: Role/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
+        {
+            IdentityRole Role = db.Roles.Find(id);
+            db.Roles.Remove(Role);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+
+
+
+
+        public Boolean isAdminUser()
+                {
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        var user = User.Identity;
+                        var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+                        var s = UserManager.GetRoles(user.GetUserId());
+                        if (s[0].ToString() == "Admin")
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+
+            /// <summary>
+            /// Create  a New role
+            /// </summary>
+            /// <returns></returns>
+            public ActionResult Create()
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (!isAdminUser())
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
                 {
                     return RedirectToAction("Index", "Home");
                 }
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
+                var Role = new IdentityRole();
+                return View(Role);
             }
 
-            context.Roles.Add(Role);
-            context.SaveChanges();
-            return RedirectToAction("Index");
+            /// <summary>
+            /// Create a New Role
+            /// </summary>
+            /// <param name="Role"></param>
+            /// <returns></returns>
+            [HttpPost]
+            public ActionResult Create(IdentityRole Role)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (!isAdminUser())
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                db.Roles.Add(Role);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
         }
     }
-}
