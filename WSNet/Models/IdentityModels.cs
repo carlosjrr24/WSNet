@@ -31,5 +31,13 @@ namespace WSNet.Models
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+
+
+
+        //https://es.stackoverflow.com/questions/9044/asp-net-mvc5-como-puedo-crear-un-crud-para-la-tabla-aspnetusers
+        //public System.Data.Entity.DbSet<WSNet.Models.ApplicationUser> ApplicationUsers { get; set; }
+
+
+
     }
 }
